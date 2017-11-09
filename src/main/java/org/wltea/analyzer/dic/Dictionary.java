@@ -30,7 +30,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -71,6 +75,8 @@ public class Dictionary {
      */
     private Configuration cfg;
 
+    private static ScheduledExecutorService pool = Executors.newScheduledThreadPool(1);
+
     private static Logger logger = LoggerFactory.getLogger(Dictionary.class);
 
     private Dictionary(Configuration cfg) {
@@ -93,6 +99,14 @@ public class Dictionary {
             synchronized (Dictionary.class) {
                 if (singleton == null) {
                     singleton = new Dictionary(cfg);
+                    // 建立监控线程
+                    for (String location : cfg.getRemoteExtDictionarys()) {
+                        // 10 秒是初始延迟可以修改的 60是间隔时间 单位秒
+                        pool.scheduleAtFixedRate(new Monitor(location), 10, 3 * 60, TimeUnit.SECONDS);
+                    }
+                    for (String location : cfg.getRemoteExtStopWordDictionarys()) {
+                        pool.scheduleAtFixedRate(new Monitor(location), 10, 3 * 60, TimeUnit.SECONDS);
+                    }
                     return singleton;
                 }
             }
