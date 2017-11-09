@@ -53,7 +53,8 @@ public class DefaultConfig implements Configuration{
 	private static final String EXT_DICT = "ext_dict";
 	//配置属性——扩展停止词典
 	private static final String EXT_STOP = "ext_stopwords";
-	
+	private final static  String REMOTE_EXT_DICT = "remote_ext_dict";
+	private final static  String REMOTE_EXT_STOP = "remote_ext_stopwords";
 	private Properties props;
 	/*
 	 * 是否使用smart方式分词
@@ -164,6 +165,36 @@ public class DefaultConfig implements Configuration{
 		}		
 		return extStopWordDictFiles;		
 	}
-			
 
+	public List<String> getRemoteExtDictionarys() {
+		List<String> remoteExtDictFiles = new ArrayList<String>(2);
+		String remoteExtDictCfg = props.getProperty(REMOTE_EXT_DICT);
+		if (remoteExtDictCfg != null) {
+
+			String[] filePaths = remoteExtDictCfg.split(";");
+			for (String filePath : filePaths) {
+				if (filePath != null && !"".equals(filePath.trim())) {
+					remoteExtDictFiles.add(filePath);
+
+				}
+			}
+		}
+		return remoteExtDictFiles;
+	}
+
+	public List<String> getRemoteExtStopWordDictionarys() {
+		List<String> remoteExtStopWordDictFiles = new ArrayList<String>(2);
+		String remoteExtStopWordDictCfg = props.getProperty(REMOTE_EXT_STOP);
+		if (remoteExtStopWordDictCfg != null) {
+
+			String[] filePaths = remoteExtStopWordDictCfg.split(";");
+			for (String filePath : filePaths) {
+				if (filePath != null && !"".equals(filePath.trim())) {
+					remoteExtStopWordDictFiles.add(filePath);
+
+				}
+			}
+		}
+		return remoteExtStopWordDictFiles;
+	}
 }

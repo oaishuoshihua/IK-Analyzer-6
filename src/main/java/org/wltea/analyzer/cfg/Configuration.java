@@ -75,5 +75,16 @@ public interface Configuration {
 	 * @return List<String> 相对类加载器的路径
 	 */
 	public List<String> getExtStopWordDictionarys();
-			
+
+	/**
+	 * 获取远程扩展词词典配置路径
+	 * @return List<String> 相对类加载器的路径
+	 */
+	public List<String> getRemoteExtDictionarys();
+
+	/**
+	 * 获取远程停用词词典配置路径
+	 * @return List<String> 相对类加载器的路径
+	 */
+	public List<String> getRemoteExtStopWordDictionarys();
 }
